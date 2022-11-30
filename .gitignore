@@ -7,4 +7,4 @@
 /nifi_registry
 /pgdb-data
 /redis_data
-/.gitignore
+.gitignore
