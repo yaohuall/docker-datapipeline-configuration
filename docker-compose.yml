@@ -1,0 +1,174 @@
+version: "3"
+
+services:
+
+    postgresql:
+      hostname: testpostgres
+      container_name: test-postgres
+      image: postgres:latest
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=postgres
+      volumes:
+        - ./pgdb-data:/var/lib/postgresql/data
+      ports:
+          - "5432:5432"
+      networks:
+          - test
+      restart: on-failure
+      healthcheck:
+            test: ["CMD", "pg_isready"]
+            interval: 30s
+            timeout: 20s
+            retries: 3
+
+    # configuration manager for NiFi
+    zookeeper:
+        hostname: testzookeeper
+        container_name: test-zookeeper
+        image: 'bitnami/zookeeper:latest' 
+        restart: on-failure
+        environment:
+            - ALLOW_ANONYMOUS_LOGIN=yes
+        networks:
+            - test
+    # version control for nifi flows
+    registry:
+        hostname: testregistry
+        container_name: test-registry
+        image: 'apache/nifi-registry:latest'  
+        restart: on-failure
+        ports:
+            - "18080:18080"
+        environment:
+            - LOG_LEVEL=INFO
+            - NIFI_REGISTRY_DB_DIR=/opt/nifi-registry/nifi-registry-current/database
+            - NIFI_REGISTRY_FLOW_PROVIDER=file
+            - NIFI_REGISTRY_FLOW_STORAGE_DIR=/opt/nifi-registry/nifi-registry-current/flow_storage
+        volumes:
+            - ./nifi_registry/database:/opt/nifi-registry/nifi-registry-current/database
+            - ./nifi_registry/flow_storage:/opt/nifi-registry/nifi-registry-current/flow_storage
+        networks:
+            - test
+    # data extraction, transformation and load service
+    nifi:
+        hostname: testnifi
+        container_name: test-nifi
+        image: 'apache/nifi:latest' 
+        restart: on-failure
+        ports:
+            - '8080:8080'
+        environment:
+            - NIFI_WEB_HTTP_PORT=8080
+            - NIFI_CLUSTER_IS_NODE=true
+            - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
+            - NIFI_ZK_CONNECT_STRING=testzookeeper:2181
+            - NIFI_ELECTION_MAX_WAIT=30 sec
+            - NIFI_SENSITIVE_PROPS_KEY='12345678901234567890B'
+        healthcheck:
+            test: "${DOCKER_HEALTHCHECK_TEST:-curl localhost:8080/nifi/}"
+            interval: "60s"
+            timeout: "3s"
+            start_period: "5s"
+            retries: 5
+        volumes:
+            - ./nifi/database_repository:/opt/nifi/nifi-current/database_repository
+            - ./nifi/flowfile_repository:/opt/nifi/nifi-current/flowfile_repository
+            - ./nifi/content_repository:/opt/nifi/nifi-current/content_repository
+            - ./nifi/provenance_repository:/opt/nifi/nifi-current/provenance_repository
+            - ./nifi/state:/opt/nifi/nifi-current/state
+            - ./nifi/logs:/opt/nifi/nifi-current/logs
+            - ./nifi/data:/opt/nifi/external-data/
+            - ./nifi/jdbc:/opt/nifi/nifi-current/jdbc
+            - ./nifi/credentials:/opt/nifi/nifi-current/credentials
+            # uncomment the next line after copying the /conf directory from the container to your local directory to persist NiFi flows
+            # - ./nifi/conf:/opt/nifi/nifi-current/conf
+        networks:
+            - test
+
+
+    minio:
+        hostname: testminio
+        container_name: test-minio
+        image: 'bitnami/minio:2022' 
+        environment:
+            - MINIO_ROOT_USER=minio
+            - MINIO_ROOT_PASSWORD=miniosecret
+        ports:
+            - '9000:9000'
+            - '9001:9001'
+        volumes:
+            - ./minio/data:/data
+        networks:
+            - test
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://testminio:9000/minio/health/live"]
+            interval: 30s
+            timeout: 20s
+            retries: 3
+
+    redis:
+        image: docker.io/bitnami/redis:7.0
+        volumes:
+        - ./redis_data:/bitnami
+        restart: on-failure
+        networks:
+            - test
+        environment:
+        # ALLOW_EMPTY_PASSWORD is recommended only for development.
+            - ALLOW_EMPTY_PASSWORD=yes
+
+    airflow-scheduler:
+        image: docker.io/bitnami/airflow-scheduler:2
+        environment:
+        - AIRFLOW_DATABASE_NAME=postgres
+        - AIRFLOW_DATABASE_USERNAME=postgres
+        - AIRFLOW_DATABASE_PASSWORD=postgres
+        - AIRFLOW_EXECUTOR=CeleryExecutor
+        - AIRFLOW_WEBSERVER_HOST=airflow
+        restart: on-failure
+        networks:
+            - test
+
+    airflow-worker:
+        image: docker.io/bitnami/airflow-worker:2
+        environment:
+        - AIRFLOW_DATABASE_NAME=postgres
+        - AIRFLOW_DATABASE_USERNAME=postgres
+        - AIRFLOW_DATABASE_PASSWORD=postgres
+        - AIRFLOW_EXECUTOR=CeleryExecutor
+        - AIRFLOW_WEBSERVER_HOST=airflow
+        restart: on-failure
+        networks:
+            - test
+
+    airflow:
+        image: docker.io/bitnami/airflow:2
+        environment:
+        - AIRFLOW_DATABASE_NAME=postgres
+        - AIRFLOW_DATABASE_USERNAME=postgres
+        - AIRFLOW_DATABASE_PASSWORD=postgres
+        - AIRFLOW_USERNAME=test
+        - AIRFLOW_PASSWORD=test
+        - AIRFLOW_EXECUTOR=CeleryExecutor
+        - TZ=Asia/Taipei
+        ports:
+        - '8081:8080'
+        restart: on-failure
+        volumes:
+            - ./airflow/dags:/opt/bitnami/airflow/dags
+        networks:
+            - test
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/admin/"]
+            interval: 30s
+            timeout: 20s
+            retries: 3
+
+volumes:
+  postgres:
+
+networks:
+  test:
+    driver: bridge

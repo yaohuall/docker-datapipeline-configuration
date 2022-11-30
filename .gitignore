@@ -1,0 +1,9 @@
+*.pyc
+*.log
+*.gz
+*.prov
+/nifi
+/minio
+/nifi_registry
+/pgdb-data
+/redis_data
