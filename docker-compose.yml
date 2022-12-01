@@ -100,6 +100,7 @@ services:
             - '9001:9001'
         volumes:
             - ./minio/data:/data
+            - ./minio/logs/:/opt/bitnami/minio/log/
         networks:
             - test
         healthcheck:
