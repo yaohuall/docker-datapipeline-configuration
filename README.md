@@ -7,6 +7,9 @@ run `docker compose up -d`
 ## convert jupyter notebook to .py file
 run `jupyter nbconvert --to=script [yourfilename]`
 
-## reference
+### reference
 https://towardsdatascience.com/how-to-build-a-data-lake-from-scratch-part-2-connecting-the-components-1bc659cb3f4f
 https://hub.docker.com/r/bitnami/minio/
+
+### data-reference
+https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
