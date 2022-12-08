@@ -161,6 +161,7 @@ services:
         restart: on-failure
         volumes:
             - ./airflow/dags:/opt/bitnami/airflow/dags
+            - ./airflow/requirements.txt:/bitnami/python/requirements.txt
         networks:
             - test
         healthcheck:

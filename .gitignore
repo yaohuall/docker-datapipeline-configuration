@@ -7,3 +7,5 @@
 /nifi_registry
 /pgdb-data
 /redis_data
+/pipeline/.ipynb_checkpoints
+/csv-data
