@@ -16,6 +16,3 @@ https://hub.docker.com/r/bitnami/minio/
 
 ### data-reference
 https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
-
-### kubectl & kops reference
-https://kubernetes.io/zh-cn/docs/tasks/tools/install-kubectl-linux/
