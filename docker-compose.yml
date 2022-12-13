@@ -170,6 +170,15 @@ services:
             timeout: 20s
             retries: 3
 
+    # kops:
+    #     build:
+    #         context: ./kops
+    #         dockerfile: Dockerfile
+    #     networks:
+    #         - test
+    #     stdin_open: true 
+    #     tty: true 
+
 volumes:
   postgres:
 
