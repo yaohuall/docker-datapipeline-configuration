@@ -11,3 +11,4 @@
 /csv-data
 .env
 /__pycache__
+/airflow/data/
