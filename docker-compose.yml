@@ -125,52 +125,76 @@ services:
     airflow-scheduler:
         image: docker.io/bitnami/airflow-scheduler:2
         environment:
+        # for airflow scheduler, worker, webserver scychronize
+        - AIRFLOW_FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+        - AIRFLOW_SECRET_KEY=a25mQ1FHTUh3MnFRSk5KMEIyVVU2YmN0VGRyYTVXY08=
         - AIRFLOW_DATABASE_NAME=postgres
         - AIRFLOW_DATABASE_USERNAME=postgres
         - AIRFLOW_DATABASE_PASSWORD=postgres
         - AIRFLOW_EXECUTOR=CeleryExecutor
         - AIRFLOW_WEBSERVER_HOST=airflow
+        - AIRFLOW_LOAD_EXAMPLES=no
+        - AIRFLOW_CONN_S3_CONN=${AIRFLOW_CONN_S3_CONN}
+        - TZ=Asia/Taipei
         restart: on-failure
         networks:
             - test
+        volumes:
+            - ./airflow/dags:/opt/bitnami/airflow/dags
+            - ./airflow/data:/opt/bitnami/airflow/data
+            - ./airflow/requirements.txt:/bitnami/python/requirements.txt
 
     airflow-worker:
         image: docker.io/bitnami/airflow-worker:2
         environment:
+        - AIRFLOW_FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+        - AIRFLOW_SECRET_KEY=a25mQ1FHTUh3MnFRSk5KMEIyVVU2YmN0VGRyYTVXY08=
         - AIRFLOW_DATABASE_NAME=postgres
         - AIRFLOW_DATABASE_USERNAME=postgres
         - AIRFLOW_DATABASE_PASSWORD=postgres
         - AIRFLOW_EXECUTOR=CeleryExecutor
         - AIRFLOW_WEBSERVER_HOST=airflow
+        - AIRFLOW_LOAD_EXAMPLES=no
+        - AIRFLOW_CONN_S3_CONN=${AIRFLOW_CONN_S3_CONN}
+        - TZ=Asia/Taipei
         restart: on-failure
         networks:
             - test
+        volumes:
+            - ./airflow/dags:/opt/bitnami/airflow/dags
+            - ./airflow/data:/opt/bitnami/airflow/data
+            - ./airflow/requirements.txt:/bitnami/python/requirements.txt
 
     airflow:
-        build: 
-            context: ./airflow/
-            dockerfile: Dockerfile
+        image: docker.io/bitnami/airflow:2
         environment:
+        - AIRFLOW_FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+        - AIRFLOW_SECRET_KEY=a25mQ1FHTUh3MnFRSk5KMEIyVVU2YmN0VGRyYTVXY08=
         - AIRFLOW_DATABASE_NAME=postgres
         - AIRFLOW_DATABASE_USERNAME=postgres
         - AIRFLOW_DATABASE_PASSWORD=postgres
         - AIRFLOW_USERNAME=test
         - AIRFLOW_PASSWORD=test
         - AIRFLOW_EXECUTOR=CeleryExecutor
+        - AIRFLOW_LOAD_EXAMPLES=no
         - TZ=Asia/Taipei
+        # - AIRFLOW_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+        # - AIRFLOW_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+        - AIRFLOW_CONN_S3_CONN=${AIRFLOW_CONN_S3_CONN}
         ports:
         - '8081:8080'
-        restart: on-failure
+        # restart: on-failure
         volumes:
             - ./airflow/dags:/opt/bitnami/airflow/dags
+            - ./airflow/data:/opt/bitnami/airflow/data
             - ./airflow/requirements.txt:/bitnami/python/requirements.txt
         networks:
             - test
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8080/admin/"]
-            interval: 30s
-            timeout: 20s
-            retries: 3
+        # healthcheck:
+        #     test: ["CMD", "curl", "-f", "http://localhost:8080/admin/"]
+        #     interval: 30s
+        #     timeout: 20s
+        #     retries: 3
 
 
     # kops:

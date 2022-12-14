@@ -10,3 +10,4 @@
 /pipeline/.ipynb_checkpoints
 /csv-data
 .env
+/__pycache__
