@@ -5,8 +5,10 @@ docker configuration for minio, postgres, airflow, nifi, spark
     docker compose up -d
 
 ## airflow setting
+
 ### airflow config path
-        cd /opt/bitnami/airflow
+    cd /opt/bitnami/airflow
+
 ### setting AWS env variables in .env file for airflow
         AIRFLOW_CONN_S3_CONN='aws://<access_key_id>:<secret_key_id>@'
 
