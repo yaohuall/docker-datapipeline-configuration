@@ -2,7 +2,7 @@
 docker configuration for minio, postgres, airflow, nifi, spark
 
 ## initialize the pipeline
-`docker compose up -d`
+    docker compose up -d
 
 ## airflow setting
 ### airflow config path
