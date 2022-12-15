@@ -15,6 +15,7 @@ run `ls -l /etc/*-release`
 run `cd /opt/bitnami/airflow`
 ### setting AWS env variables in .env file for airflow
 `AIRFLOW_CONN_S3_CONN='aws://<access_key_id>:<secret_key_id>@'`
+<font color=#000080>Note: connection id using environment variables will not show in airflow UI </font>
 
 ### reference
 https://towardsdatascience.com/how-to-build-a-data-lake-from-scratch-part-2-connecting-the-components-1bc659cb3f4f
