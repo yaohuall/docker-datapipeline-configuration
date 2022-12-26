@@ -1,0 +1,21 @@
+name: docker-compose datapipeline
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: initializing pipeline containers
+      run: |
+        docker-compose up -d
+    - name: Run a airflow container
+      run: |
+        docker exec -it test-airflow-1 bash
