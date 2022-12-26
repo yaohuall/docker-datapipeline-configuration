@@ -18,4 +18,5 @@ jobs:
         docker-compose up -d
     - name: Run a airflow container
       run: |
+        docker start test-minio
         docker exec test-minio bash
