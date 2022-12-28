@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: D:\coding\Projects\test\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/test: "true"
+    io.kompose.service: nifi
+  name: nifi
+spec:
+  containers:
+    - env:
+        - name: NIFI_CLUSTER_IS_NODE
+          value: "true"
+        - name: NIFI_CLUSTER_NODE_PROTOCOL_PORT
+          value: "8082"
+        - name: NIFI_ELECTION_MAX_WAIT
+          value: 30 sec
+        - name: NIFI_SENSITIVE_PROPS_KEY
+          value: '''12345678901234567890B'''
+        - name: NIFI_WEB_HTTP_PORT
+          value: "8080"
+        - name: NIFI_ZK_CONNECT_STRING
+          value: testzookeeper:2181
+      image: apache/nifi:latest
+      name: test-nifi
+      ports:
+        - containerPort: 8080
+      resources: {}
+      volumeMounts:
+        - mountPath: /opt/nifi/nifi-current/database_repository
+          name: nifi-claim0
+        - mountPath: /opt/nifi/nifi-current/flowfile_repository
+          name: nifi-claim1
+        - mountPath: /opt/nifi/nifi-current/content_repository
+          name: nifi-claim2
+        - mountPath: /opt/nifi/nifi-current/provenance_repository
+          name: nifi-claim3
+        - mountPath: /opt/nifi/nifi-current/state
+          name: nifi-claim4
+        - mountPath: /opt/nifi/nifi-current/logs
+          name: nifi-claim5
+        - mountPath: /opt/nifi/external-data/
+          name: nifi-claim6
+        - mountPath: /opt/nifi/nifi-current/jdbc
+          name: nifi-claim7
+        - mountPath: /opt/nifi/nifi-current/credentials
+          name: nifi-claim8
+  hostname: testnifi
+  restartPolicy: OnFailure
+  volumes:
+    - name: nifi-claim0
+      persistentVolumeClaim:
+        claimName: nifi-claim0
+    - name: nifi-claim1
+      persistentVolumeClaim:
+        claimName: nifi-claim1
+    - name: nifi-claim2
+      persistentVolumeClaim:
+        claimName: nifi-claim2
+    - name: nifi-claim3
+      persistentVolumeClaim:
+        claimName: nifi-claim3
+    - name: nifi-claim4
+      persistentVolumeClaim:
+        claimName: nifi-claim4
+    - name: nifi-claim5
+      persistentVolumeClaim:
+        claimName: nifi-claim5
+    - name: nifi-claim6
+      persistentVolumeClaim:
+        claimName: nifi-claim6
+    - name: nifi-claim7
+      persistentVolumeClaim:
+        claimName: nifi-claim7
+    - name: nifi-claim8
+      persistentVolumeClaim:
+        claimName: nifi-claim8
+status: {}

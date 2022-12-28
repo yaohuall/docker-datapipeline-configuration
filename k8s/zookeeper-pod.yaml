@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: D:\coding\Projects\test\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/test: "true"
+    io.kompose.service: zookeeper
+  name: zookeeper
+spec:
+  containers:
+    - env:
+        - name: ALLOW_ANONYMOUS_LOGIN
+          value: "yes"
+      image: bitnami/zookeeper:latest
+      name: test-zookeeper
+      resources: {}
+  hostname: testzookeeper
+  restartPolicy: OnFailure
+status: {}

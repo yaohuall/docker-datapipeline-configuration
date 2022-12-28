@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: D:\coding\Projects\test\kompose.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.network/test: "true"
+    io.kompose.service: redis
+  name: redis
+spec:
+  containers:
+    - env:
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "yes"
+      image: docker.io/bitnami/redis:7.0
+      name: redis
+      resources: {}
+      volumeMounts:
+        - mountPath: /bitnami
+          name: redis-claim0
+  restartPolicy: OnFailure
+  volumes:
+    - name: redis-claim0
+      persistentVolumeClaim:
+        claimName: redis-claim0
+status: {}

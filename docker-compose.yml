@@ -27,7 +27,7 @@ services:
     zookeeper:
         hostname: testzookeeper
         container_name: test-zookeeper
-        image: 'bitnami/zookeeper:latest' 
+        image: 'bitnami/zookeeper:latest'
         restart: on-failure
         environment:
             - ALLOW_ANONYMOUS_LOGIN=yes
@@ -37,7 +37,7 @@ services:
     registry:
         hostname: testregistry
         container_name: test-registry
-        image: 'apache/nifi-registry:latest'  
+        image: 'apache/nifi-registry:latest'
         restart: on-failure
         ports:
             - "18080:18080"
@@ -55,7 +55,7 @@ services:
     nifi:
         hostname: testnifi
         container_name: test-nifi
-        image: 'apache/nifi:latest' 
+        image: 'apache/nifi:latest'
         restart: on-failure
         ports:
             - '8080:8080'
@@ -66,12 +66,12 @@ services:
             - NIFI_ZK_CONNECT_STRING=testzookeeper:2181
             - NIFI_ELECTION_MAX_WAIT=30 sec
             - NIFI_SENSITIVE_PROPS_KEY='12345678901234567890B'
-        healthcheck:
-            test: "${DOCKER_HEALTHCHECK_TEST:-curl localhost:8080/nifi/}"
-            interval: "60s"
-            timeout: "3s"
-            start_period: "5s"
-            retries: 5
+#        healthcheck:
+#            test: "${DOCKER_HEALTHCHECK_TEST:-curl localhost:8080/nifi/}"
+#            interval: "60s"
+#            timeout: "3s"
+#            start_period: "5s"
+#            retries: 5
         volumes:
             - ./nifi/database_repository:/opt/nifi/nifi-current/database_repository
             - ./nifi/flowfile_repository:/opt/nifi/nifi-current/flowfile_repository
@@ -91,7 +91,7 @@ services:
     minio:
         hostname: testminio
         container_name: test-minio
-        image: 'bitnami/minio:2022' 
+        image: 'bitnami/minio:2022'
         environment:
             MINIO_ROOT_USER: minio
             MINIO_ROOT_PASSWORD: miniosecret
@@ -203,8 +203,8 @@ services:
     #         dockerfile: Dockerfile
     #     networks:
     #         - test
-    #     stdin_open: true 
-    #     tty: true 
+    #     stdin_open: true
+    #     tty: true
 
 volumes:
   postgres:
