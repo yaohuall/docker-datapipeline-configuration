@@ -16,9 +16,14 @@ docker configuration for minio, postgres, airflow, nifi, spark
 - ⚠️  Note: connection id using environment variables will not show in airflow UI 
 ```
 
+### using kompose convert docker-compose.yml to k8s yamls
+    curl -L https://github.com/kubernetes/kompose/releases/download/v1.26.0/kompose-linux-amd64 -o kompose
+    kompose convert
+
 ### reference
 https://towardsdatascience.com/how-to-build-a-data-lake-from-scratch-part-2-connecting-the-components-1bc659cb3f4f
 https://hub.docker.com/r/bitnami/minio/
+https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/
 
 ### data-reference
 https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
