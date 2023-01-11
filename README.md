@@ -22,7 +22,9 @@ docker configuration for minio, postgres, airflow, nifi, spark
 
 ### reference
 https://towardsdatascience.com/how-to-build-a-data-lake-from-scratch-part-2-connecting-the-components-1bc659cb3f4f
+<br>
 https://hub.docker.com/r/bitnami/minio/
+<br>
 https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/
 
 ### data-reference
