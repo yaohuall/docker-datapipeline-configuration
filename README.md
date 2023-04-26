@@ -39,3 +39,11 @@ https://airflow.apache.org/docs/apache-airflow/2.1.0/howto/connection.html
 
 #### convert jupyter notebook to .py file
     jupyter nbconvert --to=script [yourfilename]
+    
+### write your AWS secrets to .env file or export to env 
+    aws secretsmanager get-secret-value --secret-id <your_secret_id> --query SecretString --output text
+    MY_SECRET=$(aws secretsmanager get-secret-value --secret-id <your_secret_id> --query SecretString --output text)
+    export $(echo $MY_SECRET | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]") or echo $MY_SECRET | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]" > .env
+    env | grep -E "^MY_APP_" > .env
+
+
